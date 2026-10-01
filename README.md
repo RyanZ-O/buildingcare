@@ -1,38 +1,40 @@
 # BuildingCare
 
-面向住宅住户和维护团队的构件级智能检修支持平台。住户提交房间、具体位置、问题描述和照片；维护人员在同页三维模型与因果知识图谱中定位问题、逐项排查根因，并比较维修方案的成本、时间、影响房间和舒适度变化。
+English | [简体中文](README.zh-CN.md)
 
-## 功能
+A component-level maintenance decision-support platform for residential occupants and maintenance teams. Residents report a room, a specific location, a problem description and photos. Maintenance staff locate the issue in a shared 3D model and causal knowledge graph, investigate possible causes, and compare repair options by cost, duration, affected rooms and comfort impacts.
 
-- **住户报修**：手机页面、中英文描述、照片上传、房间与独立构件选择。
-- **三维定位**：真实 Rhino 模型转换为 GLB，保留 IFC 编号；支持楼层、系统、构件筛选与高亮。
-- **根因排查**：圆点连线知识图谱、相关路径高亮、候选原因切换、检查记录和实际构件绑定。
-- **维修推演**：观察、局部检修、更换与支路停运；比较费用、工时、服务中断、房间范围及温度恢复，并播放影响传播动画。
-- **报告与问答**：生成与当前分析和方案一致的报告；住户临时指导支持中英文。维护端 LLM 问答与照片识别可接入兼容 chat-completions 的服务。
+## Features
 
-## 项目结构
+- **Resident reporting**: mobile pages, English and Chinese descriptions, photo uploads, and room or individual component selection.
+- **3D localization**: a real Rhino model converted to GLB with preserved IFC identifiers; floor, system and component filtering and highlighting.
+- **Root-cause investigation**: a node-and-edge knowledge graph, highlighted query paths, selectable candidate causes, inspection records and bindings to actual components.
+- **Repair simulation**: observation, local repair, replacement and branch shutdown; comparison of costs, work hours, service interruptions, affected rooms and temperature recovery, with animated impact propagation.
+- **Reports and assistance**: reports tied to the current analysis and repair scenario, bilingual interim guidance for residents, and optional maintenance LLM chat and photo recognition through chat-completions-compatible services.
+
+## Project structure
 
 ```text
 BuildingCare/
-├── backend/                 FastAPI 接口、图查询、排查、推演和数据存储
-├── frontend/                React + TypeScript + Three.js 网页
+├── backend/                  FastAPI APIs, graph queries, investigation, simulation and storage
+├── frontend/                 React + TypeScript + Three.js application
 ├── data/
-│   ├── building.json        建筑、房间、构件与网页模型映射
-│   ├── model-properties.json 原始构件属性
-│   ├── causal-graph.json    从 Neo4j CSV 导入的知识图谱
-│   └── models/              按系统与楼层组织的 30 个 GLB 模型
-├── source/                  原始 Rhino 模型与 Neo4j CSV
-├── tools/                   模型转换、数据导入和本地 Neo4j 安装
-├── tests/                   接口、诊断、推演与模型映射测试
-├── docs/                    部署、接口和正式项目介绍
-├── .env.example             本地配置模板
-├── requirements*.txt        运行、测试与模型转换依赖
-└── *.ps1                    Windows 安装、启动、重启和停止脚本
+│   ├── building.json         Building, room and component mappings to the web model
+│   ├── model-properties.json Original component properties
+│   ├── causal-graph.json     Knowledge graph imported from a Neo4j CSV export
+│   └── models/               30 GLB models organized by system and floor
+├── source/                   Original Rhino model and Neo4j CSV export
+├── tools/                    Model conversion, data import and local Neo4j setup
+├── tests/                    API, diagnosis, simulation and model-mapping tests
+├── docs/                     Deployment, API and formal project documentation
+├── .env.example              Local configuration template
+├── requirements*.txt         Runtime, test and model-conversion dependencies
+└── *.ps1                     Windows setup, start, restart and stop scripts
 ```
 
-## 快速运行（Windows）
+## Quick start (Windows)
 
-需要 Python 3.12、Node.js 22，以及 Git LFS。原始 Rhino 模型和网页 GLB 模型使用 [Git LFS](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage) 保存，克隆后应下载实际文件。
+Install Python 3.12, Node.js 22 and Git LFS. The original Rhino model and web GLB models are stored with [Git LFS](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); download the actual files after cloning.
 
 ```powershell
 git lfs install
@@ -43,27 +45,27 @@ git lfs pull
 .\start.ps1
 ```
 
-| 入口 | 地址 |
+| Page | Address |
 | --- | --- |
-| 维护工作台 | http://localhost:8000/ |
-| 住户报修 | http://localhost:8000/report |
-| 住户助手 | http://localhost:8000/resident |
-| 正式项目资料 | http://localhost:8000/project-docs/ |
-| 接口文档 | http://localhost:8000/docs |
+| Maintenance workbench | [localhost:8000](http://localhost:8000/) |
+| Resident reporting | [localhost:8000/report](http://localhost:8000/report) |
+| Resident assistant | [localhost:8000/resident](http://localhost:8000/resident) |
+| Project documentation | [localhost:8000/project-docs](http://localhost:8000/project-docs/) |
+| Interactive API documentation | [localhost:8000/docs](http://localhost:8000/docs) |
 
-首次运行会创建空的本地工单数据库。维护首页点击 **Open demo case** 可建立并打开 HVAC 低风量演示案例，再执行根因分析与维修推演。日常后台启动使用 `.\restart.ps1`，修改前端后使用 `.\restart.ps1 -Build`；停止使用 `.\stop-background.ps1`。
+The first run creates an empty local issue database. Click **Open demo case** on the maintenance homepage to create and open the HVAC low-airflow case, then run root-cause analysis and repair simulations. Use `.\restart.ps1` to start or restart the background service, `.\restart.ps1 -Build` after frontend changes, and `.\stop-background.ps1` to stop it.
 
-手机与电脑连接同一个可互访的网络，使用启动脚本显示的 `http://<电脑局域网 IP>:8000/report`。
+For mobile access, connect the phone and computer to a mutually accessible network and use the `http://<computer-LAN-IP>:8000/report` address printed by the startup script.
 
-## 配置与数据
+## Configuration and data
 
-`setup.ps1` 会从 `.env.example` 创建本地 `.env`。默认 `KNOWLEDGE_BACKEND=snapshot`，在随仓库提供的 Neo4j CSV 图谱快照上执行查询，无需数据库服务。配置为 `neo4j` 后执行真实参数化 Cypher；数据库失败会明确报错。
+`setup.ps1` creates a local `.env` from `.env.example`. The default `KNOWLEDGE_BACKEND=snapshot` queries the included graph snapshot imported from Neo4j CSV, without requiring a database service. Setting it to `neo4j` enables actual parameterized Cypher queries; database failures are reported explicitly.
 
-完整 Neo4j、LLM、视觉服务配置及模型重建步骤见 [部署说明](docs/deployment.md)。接口和数据流见 [接口说明](docs/api.md)。[正式项目介绍](docs/project/)保留中文、英文和中英对照的 PDF 与可编辑 Word，以及构件命名对应表。
+See the [deployment guide](docs/deployment.md) for Neo4j, LLM and vision configuration and model rebuilding, and the [API guide](docs/api.md) for endpoints and data flow. These two guides are currently in Chinese. The [formal project documentation](docs/project/) includes Chinese, English and bilingual PDFs and editable Word documents, plus a component name register.
 
-工单、检查、方案和上传照片只保存在本地 `data/maintenance.sqlite3` 与 `data/uploads/`，不随仓库分发。`.env`、依赖环境、运行日志和临时文件均被 Git 忽略。
+Issues, inspections, repair scenarios and uploaded photos are stored locally in `data/maintenance.sqlite3` and `data/uploads/` and are excluded from the repository. Git also ignores `.env`, installed dependency environments, runtime logs and temporary files.
 
-## 验证
+## Validation
 
 ```powershell
 .\setup.ps1 -Dev
@@ -71,8 +73,8 @@ git lfs pull
 npm.cmd --prefix frontend run build
 ```
 
-## 当前范围
+## Current scope
 
-模型和知识图谱来自实际文件；演示中的故障、服务连接、检查结论、费用、人员和热工输入是标明的假设。知识图谱中的诊断关系与建筑服务传播关系分别处理，几何邻近不会自动生成连接。
+The building model and knowledge graph come from actual source files. Faults, service connections, inspection findings, costs, staffing and thermal inputs in the demo are identified assumptions. Diagnostic knowledge-graph relations and building service-propagation relations are handled separately; geometric proximity does not automatically establish connections.
 
-温度结果是未校准的单区空气温度情景估算。住户助手默认使用预设规则；真实 LLM 和视觉输出需配置相应服务。平台目前没有用户登录和角色权限，部署方式以本地课程演示为主。
+Temperature results are uncalibrated single-zone air-temperature scenarios. The resident assistant uses preset rules by default; live LLM and vision outputs require service configuration. The platform currently has no user authentication or role-based access control and is intended primarily for local course demonstrations.
