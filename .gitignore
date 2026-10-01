@@ -1,0 +1,35 @@
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+
+# Installed dependencies and generated frontend
+.venv/
+.runtime/
+frontend/node_modules/
+frontend/dist/
+*.tsbuildinfo
+
+# Python caches and coverage
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local reports, uploaded photos and process state
+data/*.sqlite3*
+data/*.db*
+data/uploads/
+data/*.pid
+data/*.log
+
+# Regenerated provenance summaries are already embedded in the source data
+data/model-audit.json
+data/causal-graph-audit.json
+
+# Editor and operating system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
