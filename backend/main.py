@@ -18,7 +18,7 @@ from fastapi.staticfiles import StaticFiles
 from PIL import Image, UnidentifiedImageError
 from starlette.middleware.gzip import GZipMiddleware
 
-from . import chat, investigation, resident
+from . import chat, investigation, resident, service_graph
 from .engine import analyse, now, simulate
 from .knowledge import dedupe, get_provider, load_building
 from .schemas import AnalysisRequest, ChatRequest, SimulationRequest, StatusUpdate
@@ -388,6 +388,18 @@ def create_app(data_dir: str | Path | None = None):
         store.delete_link(link_id)
         return {'deleted': True}
 
+    @api.get('/api/service-graph')
+    def read_service_graph():
+        graph = service_graph.load(directory)
+        if graph is None:
+            raise HTTPException(503, 'Run tools/build_service_graph.py to prepare the building service graph.')
+        return graph
+
+    @api.get('/api/service-graph/download')
+    def download_service_graph():
+        graph = read_service_graph()
+        return JSONResponse(graph, headers={'Content-Disposition': 'attachment; filename="building-service-graph.json"'})
+
     @api.post('/api/demo/case-study')
     def seed_case_study():
         from .case_study import create_case
@@ -439,7 +451,7 @@ def create_app(data_dir: str | Path | None = None):
         if candidate.is_file():
             return FileResponse(candidate)
         # Only known application routes receive the SPA entry point.
-        if path not in ("", "report", "resident") and not re.fullmatch(r"(?:reports|investigate)/[0-9a-f]{32}", path):
+        if path not in ("", "report", "resident", "systems") and not re.fullmatch(r"(?:reports|investigate)/[0-9a-f]{32}", path):
             raise HTTPException(404, "Not found.")
         index = frontend / "index.html"
         if index.is_file():

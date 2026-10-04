@@ -8,6 +8,7 @@ A component-level maintenance decision-support platform for residential occupant
 
 - **Resident reporting**: mobile pages, English and Chinese descriptions, photo uploads, and room or individual component selection.
 - **3D localization**: a real Rhino model converted to GLB with preserved IFC identifiers; floor, system and component filtering and highlighting.
+- **Whole-building service graph**: actual components, system memberships, pipe and duct connection proposals, equipment dependencies, power feeder candidates and room service ranges, with evidence inspection and linked 3D highlighting.
 - **Root-cause investigation**: a node-and-edge knowledge graph, highlighted query paths, selectable candidate causes, inspection records and bindings to actual components.
 - **Repair simulation**: observation, local repair, replacement and branch shutdown; comparison of costs, work hours, service interruptions, affected rooms and temperature recovery, with animated impact propagation.
 - **Reports and assistance**: reports tied to the current analysis and repair scenario, bilingual interim guidance for residents, and optional maintenance LLM chat and photo recognition through chat-completions-compatible services.
@@ -22,6 +23,7 @@ BuildingCare/
 │   ├── building.json         Building, room and component mappings to the web model
 │   ├── model-properties.json Original component properties
 │   ├── causal-graph.json     Knowledge graph imported from a Neo4j CSV export
+│   ├── service-graph.json    Whole-building instance relationships and their evidence
 │   └── models/               30 GLB models organized by system and floor
 ├── source/                   Original Rhino model and Neo4j CSV export
 ├── tools/                    Model conversion, data import and local Neo4j setup
@@ -48,6 +50,7 @@ git lfs pull
 | Page | Address |
 | --- | --- |
 | Maintenance workbench | [localhost:8000](http://localhost:8000/) |
+| Building service graph | [localhost:8000/systems](http://localhost:8000/systems) |
 | Resident reporting | [localhost:8000/report](http://localhost:8000/report) |
 | Resident assistant | [localhost:8000/resident](http://localhost:8000/resident) |
 | Project documentation | [localhost:8000/project-docs](http://localhost:8000/project-docs/) |
@@ -75,6 +78,8 @@ npm.cmd --prefix frontend run build
 
 ## Current scope
 
-The building model and knowledge graph come from actual source files. Faults, service connections, inspection findings, costs, staffing and thermal inputs in the demo are identified assumptions. Diagnostic knowledge-graph relations and building service-propagation relations are handled separately; geometric proximity does not automatically establish connections.
+The building model and knowledge graph come from actual source files. The whole-building graph preserves 10,575 model entities, 47 system networks and 71 selectable rooms. System membership comes from model properties; the 8,507 reconstructed connection, direction, power and service links are explicitly labeled proposals. Missing connections and ambiguous assignments remain visible. See [service graph methods](docs/service-graph.md) for evidence, scope and rebuilding.
+
+Faults, service connections, inspection findings, costs, staffing and thermal inputs in the demo are identified assumptions. Diagnostic knowledge, reconstructed building relationships and active service-propagation rules are handled separately. Reconstructed proposals do not automatically enter outage simulations.
 
 Temperature results are uncalibrated single-zone air-temperature scenarios. The resident assistant uses preset rules by default; live LLM and vision outputs require service configuration. The platform currently has no user authentication or role-based access control and is intended primarily for local course demonstrations.

@@ -22,6 +22,7 @@
 | 分析与排查 | `GET/POST /api/issues/{id}/analysis`、`POST /api/issues/{id}/bindings`、`POST /api/issues/{id}/inspections`、`GET /api/issues/{id}/trace` |
 | 视觉识别 | `POST /api/issues/{id}/identify`、`GET /api/issues/{id}/identifications` |
 | 服务关系 | `GET/POST /api/topology`、`DELETE /api/topology/{id}` |
+| 全楼关系图 | `GET /api/service-graph`、`GET /api/service-graph/download`（推断候选，不自动写入主动服务关系） |
 | 方案与推演 | `GET /api/issues/{id}/plans`、`GET/POST /api/issues/{id}/simulations` |
 | 报告与问答 | `GET /api/issues/{id}/report`、`POST /api/issues/{id}/chat`、`POST /api/resident/chat` |
 | 演示案例 | `POST /api/demo/case-study`、`POST /api/demo/seed` |
